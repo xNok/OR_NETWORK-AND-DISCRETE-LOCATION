@@ -8,5 +8,5 @@ setup(name='NetAndLocUtil',
       author='xNok',
       author_email='nokwebspace@gmail.com',
       url='https://github.com/xNok/OR_NETWORK-AND-DISCRETE-LOCATION',
-      packages=['dataset'],
+      packages=['dataset', 'dataviz'],
      )
