@@ -18,7 +18,7 @@ class Network:
         
         self.metadata = metadata
             
-    def plot(self, node_size=None, node_color=None, metadata={
+    def plot_nodes(self, node_size=None, node_color=None, metadata={
         "figsize": (10,5),
         "window": [-128, -62, 20, 50]
     }):
@@ -50,7 +50,10 @@ class Network:
             else:
                 node_size  = [ x for n,x in self.G.nodes.data(node_size)]
         if node_color:
-            node_color = [ x for n,x in self.G.nodes.data(node_color)]
+            if isinstance(node_color, tuple):
+                node_color  = [ x * node_color[1]  for n,x in self.G.nodes.data(node_color[0])]
+            else:
+                node_color  = [ x for n,x in self.G.nodes.data(node_color)]
 
         # 2. Plot the graph on the map
         nc = nx.draw_networkx_nodes(self.G, pos, node_size=node_size, node_color=node_color)
