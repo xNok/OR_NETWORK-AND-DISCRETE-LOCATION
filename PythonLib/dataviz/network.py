@@ -11,7 +11,7 @@ class Network:
     """
     
     def __init__(self, dataset, metadata={}):
-        """Build the netwoksx network base on the pandas dataset"""
+        """Instanciate networkx graph base on the pandas dataset"""
         self.df = dataset.get()
         self.G  = nx.Graph()
         self.G.add_nodes_from(self.df.T.to_dict().items())
@@ -43,7 +43,7 @@ class Network:
             facecolor='none')
         ax.add_feature(states_provinces, edgecolor='gray')
         
-        pos = {n:(-d["LATITUDE"],d["LONGITUDE"]) for n,d in self.G.nodes.items()}
+        pos = {n:(d["LATITUDE"],d["LONGITUDE"]) for n,d in self.G.nodes.items()}
         if node_size:
             if isinstance(node_size, tuple):
                 node_size  = [ x * node_size[1]  for n,x in self.G.nodes.data(node_size[0])]
