@@ -11,7 +11,11 @@ class Network:
     """
     
     def __init__(self, dataset, metadata={}):
-        """Instanciate networkx graph base on the pandas dataset"""
+        """
+        Instanciate networkx graph base on the pandas dataset
+        /!\ we assume that the dataset is a set of nodes
+        
+        """
         self.df = dataset.get()
         self.G  = nx.Graph()
         self.G.add_nodes_from(self.df.T.to_dict().items())
@@ -58,7 +62,7 @@ class Network:
         # 2. Plot the graph on the map
         nc = nx.draw_networkx_nodes(self.G, pos, node_size=node_size, node_color=node_color)
         
+        nx.draw_networkx_edges(self.G, pos)
+        
         if node_color:
             plt.colorbar(nc)
-
-        

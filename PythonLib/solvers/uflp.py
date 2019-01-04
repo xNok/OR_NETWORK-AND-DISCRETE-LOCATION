@@ -20,6 +20,9 @@ def uflp(I, J, f, c, name='UFLP'):
     # Define Objective
     m.minimize(m.sum(X[i,j] * c[i][j] for i in I for j in J) \
               + m.sum(Y[j] * f[j] for j in J))
+    
+    m.add_kpi(m.sum(X[i,j] * c[i][j] for i in I for j in J), "transportation cost")
+    m.add_kpi(m.sum(Y[j] * f[j] for j in J), "fixed cost")
 
     ###################
     # Define constraints
@@ -32,7 +35,5 @@ def uflp(I, J, f, c, name='UFLP'):
     for i in I:
         for j in J:
             m.add_constraint(X[i,j] <= Y[j], ctname='flow_%s_%s' % (i,j))
-    
-    m.solve()
             
     return m, X, Y
