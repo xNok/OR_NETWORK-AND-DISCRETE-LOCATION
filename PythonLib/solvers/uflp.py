@@ -28,8 +28,8 @@ def uflp(I, J, f, c, name='UFLP'):
     # Define constraints
 
     # constraint #1: each customer is affected to a facility
-    for j in J:
-        m.add_constraint(m.sum(X[i,j] for i in I) == 1, ctname='demande_%s' % j)
+    for i in I:
+        m.add_constraint(m.sum(X[i,j] for j in J) == 1, ctname='demande_%s' % i)
 
     # constraint #2: customer can only be associated to open facilities
     for i in I:
