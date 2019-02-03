@@ -1,6 +1,13 @@
 from docplex.mp.model import Model
 
 def uflp(I, J, f, c, name='UFLP'):
+    """
+    I = Set of customers (1d-array)
+    J = Set of Facilities (1d-array)
+    f = Fixed cost associated to each facility (1d-array)
+    c = Cost of connecting on element of I with J (2d-arra)
+    """
+    
     ###################
     # create one model instance
     m = Model(name=name)

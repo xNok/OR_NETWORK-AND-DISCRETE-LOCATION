@@ -32,9 +32,9 @@ class MongoClient:
         self.df = pd.DataFrame.from_dict(record["data"])
         
         if index:
-            self.df = self.df.set_index(index)
+            self.df = self.df.set_index(index).sort_index()
         else:
-            self.df = self.df.reset_index(drop=True)
+            self.df = self.df.reset_index(drop=True).sort_index()
         
         return self.df
     

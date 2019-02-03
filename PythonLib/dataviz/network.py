@@ -47,7 +47,7 @@ class Network:
             facecolor='none')
         ax.add_feature(states_provinces, edgecolor='gray')
         
-        pos = {n:(d["LATITUDE"],d["LONGITUDE"]) for n,d in self.G.nodes.items()}
+        pos = {n:(d["LONGITUDE"],d["LATITUDE"]) for n,d in self.G.nodes.items()}
         if node_size:
             if isinstance(node_size, tuple):
                 node_size  = [ x * node_size[1]  for n,x in self.G.nodes.data(node_size[0])]
