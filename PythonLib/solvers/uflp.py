@@ -2,10 +2,15 @@ from docplex.mp.model import Model
 
 def uflp(I, J, f, c, name='UFLP'):
     """
-    I = Set of customers (1d-array)
-    J = Set of Facilities (1d-array)
-    f = Fixed cost associated to each facility (1d-array)
-    c = Cost of connecting on element of I with J (2d-arra)
+    Inputs:
+        I = Set of customers (1d-array)
+        J = Set of Facilities (1d-array)
+        f = Fixed cost associated to each facility (1d-array)
+        c = Cost of connecting element of I with J (2d-arra)
+    Ouputs:
+        m = cplex Model Object
+        X = decision variables related to the routing
+        Y = decision variablse related to open facilities
     """
     
     ###################
