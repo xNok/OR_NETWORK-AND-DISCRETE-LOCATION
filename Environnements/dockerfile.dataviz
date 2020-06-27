@@ -1,0 +1,9 @@
+FROM jupyter/scipy-notebook
+
+# Environment Variables
+ENV JUPYTER_ENABLE_LAB=yes
+ENV PROJ_LIB=/opt/conda/share/proj
+
+# Stecific to our infra
+RUN conda install -y pymongo \
+ && conda install -y basemap
