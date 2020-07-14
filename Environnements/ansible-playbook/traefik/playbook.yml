@@ -1,0 +1,17 @@
+#################################################
+# OR INFRA Playbooks: Traefik
+# Source: 
+#    https://github.com/arillso/ansible.traefik
+#    https://geek-cookbook.funkypenguin.co.nz/ha-docker-swarm/traefik/
+#################################################
+---
+- hosts: webservers
+  roles:
+    - role: arillso.traefik
+      become: true
+      traefik_confkey_api:
+        dashboard: true # use this for enabling the dashboard
+      traefik_ports:
+        - '80:80'
+        - '443:443'
+        - '8080:8080'
