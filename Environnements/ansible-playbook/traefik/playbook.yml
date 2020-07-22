@@ -5,13 +5,63 @@
 #    https://geek-cookbook.funkypenguin.co.nz/ha-docker-swarm/traefik/
 #################################################
 ---
-- hosts: webservers
-  roles:
-    - role: arillso.traefik
-      become: true
-      traefik_confkey_api:
-        dashboard: true # use this for enabling the dashboard
-      traefik_ports:
-        - '80:80'
-        - '443:443'
-        - '8080:8080'
+- hosts: swarm_managers
+  gather_facts: no
+  become: true
+  vars_files:
+    - vars/default.yml
+  vars:  
+    traefik_dir: "/var/data/traefik"
+    traefik_config_template: base
+  tasks:
+    ###
+    # Files Setup
+    ###
+
+    - name: Copy traefik folder to remote server
+      copy:
+        src: "{{ playbook_dir }}/"
+        dest: "{{ traefik_dir }}"
+
+    - name: Check if file required file exists
+      stat:
+        path: "{{ traefik_dir }}/{{ item }}"
+      with_items:
+        - acme.json
+        - traefik.log
+        - traefik-access.log
+      register: check_traefik_file
+
+    - name: Copying the required file if missing
+      file: 
+        path:  "{{ traefik_dir }}/{{ item.item }}"
+        state: touch
+      with_items: "{{ check_traefik_file.results }}"
+      when: item.stat.exists == false
+
+    - name: Generate traefik.yml configuration
+      template:
+        src: "templates/traefik-{{traefik_config_template}}.yml.j2"
+        dest: "{{ traefik_dir }}/traefik.yml"
+        mode: 0644
+
+    ###
+    # Start Container
+    ###
+
+    - name: Start Traefik Stack
+      docker_compose:
+        project_src: "{{ traefik_dir }}"
+        restarted: yes
+
+# Easy setup using existing role
+# - hosts: webservers
+#   roles:
+#     - role: arillso.traefik
+#       become: true
+#       traefik_confkey_api:
+#         dashboard: true # use this for enabling the dashboard
+#       traefik_ports:
+#         - '80:80'
+#         - '443:443'
+#         - '8080:8080'

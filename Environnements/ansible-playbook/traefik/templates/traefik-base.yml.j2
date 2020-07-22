@@ -1,0 +1,21 @@
+#####
+# DOCKER provider
+#####
+providers:
+  docker:
+  {% raw %}
+    defaultRule: "PathPrefix(`/{{ .Name }}`)"
+  {% endraw %}
+
+#####
+# OPS configs
+#####
+api:
+  insecure: {{ insecure }}
+  debug: {{ debug }}
+
+log:
+  filePath: "/traefik.log"
+
+accessLog:
+  filePath: "/traefik-access.log"

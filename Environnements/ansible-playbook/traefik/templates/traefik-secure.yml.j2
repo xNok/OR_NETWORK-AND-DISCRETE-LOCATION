@@ -1,0 +1,60 @@
+#####
+# DOCKER provider
+#####
+providers:
+  docker:
+  {% raw %}
+    defaultRule: "PathPrefix(`{{ trimPrefix `/` .Name }}`)"
+  {% endraw %}
+
+#####
+# OPS configs
+#####
+api:
+  debug: {{ debug }}
+
+log:
+  filePath: "/traefik.log"
+
+accessLog:
+  filePath: "/traefik-access.log"
+
+#####
+# CORE configs
+#####
+entryPoints:
+  web:
+    address: 80
+    http:
+      redirections:
+        entrypoint:
+          to: websecure
+          scheme: https
+
+  websecure:
+    address: 443
+
+# Enable Let's Encrypt automatic SSL.
+#
+certificatesResolvers:
+  myresolver:
+    # Enable ACME (Let's Encrypt): automatic SSL.
+    acme:
+
+      # Email address used for registration.
+      #
+      # Required
+      #
+      email: "{{ email }}"
+
+      # File or key used for certificates storage.
+      #
+      # Required
+      #
+      storage: "acme.json"
+
+      # Use a TLS-ALPN-01 ACME challenge.
+      #
+      # Optional (but recommended)
+      #
+      tlsChallenge:

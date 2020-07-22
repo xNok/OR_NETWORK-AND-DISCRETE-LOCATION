@@ -4,7 +4,7 @@
 
 ## Prepare SSH keys
 
-`ansible-playbook ansible-playbook/password-less-ssh.yml --extra-vars "node= user= password= passphrase="`
+`ansible-playbook ansible-playbook/password-less-ssh/playbook.yml --extra-vars "node= user= password= passphrase="`
 
 ## test connectivity
 
