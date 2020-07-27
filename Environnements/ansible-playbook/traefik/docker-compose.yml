@@ -1,7 +1,7 @@
-version: '3'
+version: '3.8'
 
 services:
-  reverse-proxy:
+  traefik:
     # The official v2 Traefik docker image
     image: traefik:v2.2
     ports:
@@ -16,7 +16,39 @@ services:
       - /var/data/traefik/traefik.log:/traefik.log
       - /var/data/traefik/traefik-access.log:/traefik-access.log
       - /var/data/traefik/acme.json:/acme.json
+    networks:
+      - docker_swarm_public
+
+  traefik-forward-auth:
+    image: thomseddon/traefik-forward-auth:2
+    environment:
+      - PROVIDERS_GOOGLE_CLIENT_ID
+      - PROVIDERS_GOOGLE_CLIENT_SECRET
+      - SECRET
+      - INSECURE_COOKIE=true # Example assumes no https, do not use in production
+    networks:
+      - docker_swarm_public
+    labels:
+      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://traefik-forward-auth:4181"
+      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User"
+      - "traefik.http.services.traefik-forward-auth.loadbalancer.server.port=4181"
 
   whoami:
     # A container that exposes an API to show its IP address
     image: containous/whoami
+    networks:
+      - docker_swarm_public
+    labels:
+      - "traefik.http.routers.whoami.middlewares=traefik-forward-auth"
+
+networks:
+  docker_swarm_public:
+    external: true
+
+secrets:
+  PROVIDERS_GOOGLE_CLIENT_ID:
+    external: true
+  PROVIDERS_GOOGLE_CLIENT_SECRET:
+    external: true
+  PROVIDERS_GOOGLE_OAUTH_SECRET:
+    external: true

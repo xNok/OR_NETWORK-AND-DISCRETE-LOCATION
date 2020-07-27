@@ -10,19 +10,24 @@
   become: true
   vars_files:
     - vars/default.yml
+    # Make sure this file is not commited and secure with vault
+    - vars/secrets.yml
   vars:  
     traefik_dir: "/var/data/traefik"
     traefik_config_template: base
   tasks:
     ###
-    # Files Setup
+    # GENERAL Setup
     ###
-
     - name: Copy traefik folder to remote server
       copy:
         src: "{{ playbook_dir }}/"
         dest: "{{ traefik_dir }}"
-
+      tags:
+        - general_setup
+    ###
+    # Traefik Setup
+    ###
     - name: Check if file required file exists
       stat:
         path: "{{ traefik_dir }}/{{ item }}"
@@ -44,15 +49,29 @@
         src: "templates/traefik-{{traefik_config_template}}.yml.j2"
         dest: "{{ traefik_dir }}/traefik.yml"
         mode: 0644
-
+    ###
+    # Google Auth Setup
+    ###
+    - name: Create secret (from a file on the control machine)
+      docker_secret:
+        name: "{{ item }}"
+        # If the file is JSON or binary, Ansible might modify it (because
+        # it is first decoded and later re-encoded). Base64-encoding the
+        # file directly after reading it prevents this to happen.
+        data: "{{ lookup('vars', item) }}"
+        state: present
+      with_items:
+        - PROVIDERS_GOOGLE_CLIENT_ID
+        - PROVIDERS_GOOGLE_CLIENT_SECRET
+        - PROVIDERS_GOOGLE_OAUTH_SECRET
     ###
     # Start Container
     ###
-
     - name: Start Traefik Stack
-      docker_compose:
-        project_src: "{{ traefik_dir }}"
-        restarted: yes
+      docker_stack:
+        state: present
+        name: traefik
+        compose: "{{ traefik_dir }}/docker-compose.yml"
 
 # Easy setup using existing role
 # - hosts: webservers

@@ -105,3 +105,4 @@ venv.bak/
 
 # ansible inventory
 .inv
+*secret*.yml
