@@ -7,7 +7,7 @@ services:
     ports:
       # The HTTP port
       - "80:80"
-      # The Web UI (enabled by --api.insecure=true)
+      # The Web UI
       - "8080:8080"
     volumes:
       # So that Traefik can listen to the Docker events
@@ -18,13 +18,21 @@ services:
       - /var/data/traefik/acme.json:/acme.json
     networks:
       - docker_swarm_public
+    # labels:
+      # - "traefik.http.routers.dashboard.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
+      # - "traefik.http.routers.dashboard.service=api@internal"
+      # - "traefik.http.routers.dashboard.middlewares=traefik-forward-auth"
+      # Dummy service for Swarm port detection. The port can be any valid integer value.
+      # - "traefik.http.services.dummy-svc.loadbalancer.server.port=9999"
 
   traefik-forward-auth:
     image: thomseddon/traefik-forward-auth:2
+    secrets:
+      - source: TRAEFIK_FORWARD_AUTH_PROVIDERS_GOOGLE
+        target: /config
+        mode: 0400
     environment:
-      - PROVIDERS_GOOGLE_CLIENT_ID
-      - PROVIDERS_GOOGLE_CLIENT_SECRET
-      - SECRET
+      - CONFIG=/config
       - INSECURE_COOKIE=true # Example assumes no https, do not use in production
     networks:
       - docker_swarm_public
@@ -46,9 +54,5 @@ networks:
     external: true
 
 secrets:
-  PROVIDERS_GOOGLE_CLIENT_ID:
-    external: true
-  PROVIDERS_GOOGLE_CLIENT_SECRET:
-    external: true
-  PROVIDERS_GOOGLE_OAUTH_SECRET:
+  TRAEFIK_FORWARD_AUTH_PROVIDERS_GOOGLE:
     external: true

@@ -25,6 +25,7 @@
         dest: "{{ traefik_dir }}"
       tags:
         - general_setup
+        - redeploy
     ###
     # Traefik Setup
     ###
@@ -49,21 +50,22 @@
         src: "templates/traefik-{{traefik_config_template}}.yml.j2"
         dest: "{{ traefik_dir }}/traefik.yml"
         mode: 0644
+      tags:
+        - redeploy
     ###
     # Google Auth Setup
     ###
+    - name: Remove Traefik stack
+      docker_stack:
+        name: traefik
+        state: absent
+
     - name: Create secret (from a file on the control machine)
       docker_secret:
-        name: "{{ item }}"
-        # If the file is JSON or binary, Ansible might modify it (because
-        # it is first decoded and later re-encoded). Base64-encoding the
-        # file directly after reading it prevents this to happen.
-        data: "{{ lookup('vars', item) }}"
+        name: "TRAEFIK_FORWARD_AUTH_PROVIDERS_GOOGLE"
+        data: "{{ lookup('file', playbook_dir + '/TRAEFIK_FORWARD_AUTH_PROVIDERS_GOOGLE.env') }}"
+        force: yes
         state: present
-      with_items:
-        - PROVIDERS_GOOGLE_CLIENT_ID
-        - PROVIDERS_GOOGLE_CLIENT_SECRET
-        - PROVIDERS_GOOGLE_OAUTH_SECRET
     ###
     # Start Container
     ###
@@ -72,6 +74,8 @@
         state: present
         name: traefik
         compose: "{{ traefik_dir }}/docker-compose.yml"
+      tags:
+        - redeploy
 
 # Easy setup using existing role
 # - hosts: webservers
