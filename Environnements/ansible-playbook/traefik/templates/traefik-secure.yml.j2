@@ -37,12 +37,6 @@ entryPoints:
 #####
 # SECURITY configs
 #####
-http:
-  middlewares:
-    test-auth:
-      forwardAuth:
-        address: "https://example.com/auth"
-
 certificatesResolvers:
   myresolver:
     # Enable ACME (Let's Encrypt): automatic SSL.

@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  traefik:
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/data/traefik/traefik.yml:/etc/traefik/traefik.yml
+      - /var/data/traefik/traefik.log:/traefik.log
+      - /var/data/traefik/traefik-access.log:/traefik-access.log

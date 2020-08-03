@@ -27,6 +27,23 @@ ssh-add ~/.ssh/id_rsa
 
 ## Install Traefik
 
-`ansible-galaxy install arillso.traefik`
-
 `ansible-playbook ansible-playbook/traefik/playbook.yml -i .inv`
+
+Traefik is availiables at:
+* traefik.${DOMAINE}/api
+* traefik.${DOMAINE}/dashboard
+
+
+* https://github.com/acmesh-official/acme.sh
+* https://github.com/acmesh-official/acme.sh/wiki/dnsapi
+* https://github.com/acmesh-official/acme.sh/wiki/How-to-use-OVH-domain-api
+
+
+## Local testing
+
+`docker stack deploy traefik --compose-file .\docker-compose.yml --compose-file .\docker-compose.local.yml`
+
+## References
+
+* https://www.codementor.io/@slavko/unobtrusive-local-development-with-traefik2-docker-and-letsencrypt-15qw1ypoi8
+* https://dev.to/ohffs/traefik-v2-with-docker-swarm-2cgh

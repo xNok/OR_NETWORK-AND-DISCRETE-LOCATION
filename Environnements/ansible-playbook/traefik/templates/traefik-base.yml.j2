@@ -3,6 +3,8 @@
 #####
 providers:
   docker:
+    swarmMode: true
+    exposedbydefault: false
   {% raw %}
     defaultRule: "PathPrefix(`/{{ .Name }}`)"
   {% endraw %}
