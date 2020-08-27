@@ -47,3 +47,7 @@ Traefik is availiables at:
 
 * https://www.codementor.io/@slavko/unobtrusive-local-development-with-traefik2-docker-and-letsencrypt-15qw1ypoi8
 * https://dev.to/ohffs/traefik-v2-with-docker-swarm-2cgh
+
+Let's Encrypt:
+* https://medium.com/nephely/configure-traefik-for-the-dns-01-challenge-with-ovh-as-dns-provider-c737670c0434
+* https://docs.traefik.io/user-guides/docker-compose/acme-dns/

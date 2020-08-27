@@ -58,4 +58,13 @@ certificatesResolvers:
       #
       # Optional (but recommended)
       #
-      tlsChallenge:
+      tlsChallenge: {}
+
+      # Use the DNS-01 challenge to generate and renew ACME certificates by provisioning a DNS record.
+      # Configuration is specific to your DNS provider
+      #
+      # Optional (but recommended)
+      #
+      dnsChallenge:
+        provider: {{ dnsChallengeProvider }}
+        delayBeforeCheck: 10

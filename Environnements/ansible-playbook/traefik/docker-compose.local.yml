@@ -11,4 +11,4 @@ services:
   whoami:
     deploy:
         labels:
-          - "traefik.http.routers.whoami.rule=Host(`whoami.example.com`)"
+          - "traefik.http.routers.whoami.rule=Host(`whoami.dev.nokwebspace.ovh`)"
