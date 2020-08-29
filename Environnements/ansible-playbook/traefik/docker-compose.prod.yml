@@ -7,3 +7,11 @@ services:
       - /var/data/traefik/traefik.yml:/etc/traefik/traefik.yml
       - /var/data/traefik/traefik.log:/traefik.log
       - /var/data/traefik/traefik-access.log:/traefik-access.log
+    deploy:
+      labels:
+        - "traefik.http.routers.dashboard.rule=Host(`traefik.nokwebspace.ovh`)"
+
+  whoami:
+    deploy:
+        labels:
+          - "traefik.http.routers.whoami.rule=Host(`whoami.nokwebspace.ovh`)"

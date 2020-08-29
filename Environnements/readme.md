@@ -51,3 +51,6 @@ Traefik is availiables at:
 Let's Encrypt:
 * https://medium.com/nephely/configure-traefik-for-the-dns-01-challenge-with-ovh-as-dns-provider-c737670c0434
 * https://docs.traefik.io/user-guides/docker-compose/acme-dns/
+
+Ansible Vault:
+*https://symfonycasts.com/screencast/ansible/variable-vault

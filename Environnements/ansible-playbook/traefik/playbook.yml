@@ -10,11 +10,9 @@
   become: true
   vars_files:
     - vars/default.yml
-    # Make sure this file is not commited and secure with vault
-    - vars/secrets.yml
   vars:  
     traefik_dir: "/var/data/traefik"
-    traefik_config_template: base
+    traefik_config_template: secure
   tasks:
     ###
     # GENERAL Setup
@@ -53,27 +51,15 @@
       tags:
         - redeploy
     ###
-    # Google Auth Setup
-    ###
-    - name: Remove Traefik stack
-      docker_stack:
-        name: traefik
-        state: absent
-
-    - name: Create secret (from a file on the control machine)
-      docker_secret:
-        name: "TRAEFIK_FORWARD_AUTH_PROVIDERS_GOOGLE"
-        data: "{{ lookup('file', playbook_dir + '/TRAEFIK_FORWARD_AUTH_PROVIDERS_GOOGLE.env') }}"
-        force: yes
-        state: present
-    ###
     # Start Container
     ###
     - name: Start Traefik Stack
       docker_stack:
         state: present
         name: traefik
-        compose: "{{ traefik_dir }}/docker-compose.yml"
+        compose: 
+        - "{{ traefik_dir }}/docker-compose.yml"
+        - "{{ traefik_dir }}/docker-compose.prod.yml"
       tags:
         - redeploy
 

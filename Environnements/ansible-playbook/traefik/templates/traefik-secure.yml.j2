@@ -2,7 +2,9 @@
 # DOCKER provider
 #####
 providers:
-  docker:
+  docker:    
+    swarmMode: true
+    # exposedbydefault: false
   {% raw %}
     defaultRule: "PathPrefix(`{{ trimPrefix `/` .Name }}`)"
   {% endraw %}
@@ -11,6 +13,7 @@ providers:
 # OPS configs
 #####
 api:
+  dashboard: true
   debug: {{ debug }}
 
 log:
@@ -24,7 +27,7 @@ accessLog:
 #####
 entryPoints:
   web:
-    address: 80
+    address: :80
     http:
       redirections:
         entrypoint:
@@ -32,7 +35,7 @@ entryPoints:
           scheme: https
 
   websecure:
-    address: 443
+    address: :443
 
 #####
 # SECURITY configs
@@ -41,6 +44,8 @@ certificatesResolvers:
   myresolver:
     # Enable ACME (Let's Encrypt): automatic SSL.
     acme:
+
+      caServer: {{ caServer }}
 
       # Email address used for registration.
       #
