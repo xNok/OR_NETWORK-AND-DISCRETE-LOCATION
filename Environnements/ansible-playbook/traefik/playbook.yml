@@ -17,10 +17,12 @@
     ###
     # GENERAL Setup
     ###
-    - name: Copy traefik folder to remote server
+    - name: Copy compose files to remote server
       copy:
-        src: "{{ playbook_dir }}/"
+        src: "{{ item }}"
         dest: "{{ traefik_dir }}"
+      with_fileglob:
+        - "{{ playbook_dir }}/docker-compose.*"
       tags:
         - general_setup
         - redeploy
@@ -48,11 +50,18 @@
         src: "templates/traefik-{{traefik_config_template}}.yml.j2"
         dest: "{{ traefik_dir }}/traefik.yml"
         mode: 0644
+      register: traefik_conf
       tags:
         - redeploy
     ###
     # Start Container
     ###
+    - name: Remove Traefik stack
+      docker_stack:
+        name: traefik
+        state: absent
+      when: traefik_conf.changed
+
     - name: Start Traefik Stack
       docker_stack:
         state: present
@@ -62,6 +71,7 @@
         - "{{ traefik_dir }}/docker-compose.prod.yml"
       tags:
         - redeploy
+
 
 # Easy setup using existing role
 # - hosts: webservers

@@ -5,9 +5,6 @@ providers:
   docker:    
     swarmMode: true
     # exposedbydefault: false
-  {% raw %}
-    defaultRule: "PathPrefix(`{{ trimPrefix `/` .Name }}`)"
-  {% endraw %}
 
 #####
 # OPS configs
@@ -30,18 +27,20 @@ entryPoints:
     address: :80
     http:
       redirections:
-        entrypoint:
+        entryPoint:
           to: websecure
           scheme: https
-
   websecure:
     address: :443
+    http:
+      tls:
+        certResolver: letsencrypt
 
 #####
 # SECURITY configs
 #####
 certificatesResolvers:
-  myresolver:
+  letsencrypt:
     # Enable ACME (Let's Encrypt): automatic SSL.
     acme:
 

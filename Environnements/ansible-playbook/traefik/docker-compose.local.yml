@@ -10,7 +10,13 @@ services:
     deploy:
       labels:
         - "traefik.http.routers.dashboard.rule=Host(`traefik.dev.nokwebspace.ovh`)"
+
+  traefik-forward-auth:
+    deploy:
+      labels:
+        - "traefik.http.routers.traefik-forward-auth.rule=Host(`auth.dev.nokwebspace.ovh`)"
+
   whoami:
     deploy:
-        labels:
-          - "traefik.http.routers.whoami.rule=Host(`whoami.dev.nokwebspace.ovh`)"
+      labels:
+        - "traefik.http.routers.whoami.rule=Host(`whoami.dev.nokwebspace.ovh`)"
