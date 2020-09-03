@@ -1,0 +1,44 @@
+#################################################
+# OR INFRA Playbooks: Traefik
+# Source: 
+#    https://github.com/arillso/ansible.traefik
+#    https://geek-cookbook.funkypenguin.co.nz/ha-docker-swarm/traefik/
+#################################################
+---
+- hosts: swarm_managers
+  gather_facts: no
+  become: true
+  # vars_files:
+  #   - vars/default.yml
+  vars:  
+    portainer_dir: "/var/data/portainer"
+  tasks:
+    ###
+    # GENERAL Setup
+    ###
+    - name: Creates directory
+      file:
+        path: "{{ portainer_dir }}"
+        state: directory
+
+    - name: Copy compose files to remote server
+      copy:
+        src: "{{ item }}"
+        dest: "{{ portainer_dir }}"
+      with_fileglob:
+        - "{{ playbook_dir }}/docker-compose.*"
+      tags:
+        - general_setup
+        - redeploy
+    ###
+    # Docker Stack
+    ###
+    - name: Start Portainer Stack
+      docker_stack:
+        state: present
+        name: portainer
+        compose: 
+        - "{{ portainer_dir }}/docker-compose.yml"
+        - "{{ portainer_dir }}/docker-compose.prod.yml"
+      tags:
+        - redeploy

@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  portainer:
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.portainer.loadbalancer.server.port=9000" # it seems you always need to give traefik a port so it 'notices' the service  
+        - "traefik.http.routers.portainer.entrypoints=websecure"
+        - "traefik.http.routers.portainer.rule=Host(`portainer.dev.nokwebspace.ovh`)"
+        - "traefik.docker.network=docker_swarm_public"

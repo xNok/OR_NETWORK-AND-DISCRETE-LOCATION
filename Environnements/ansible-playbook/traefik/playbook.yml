@@ -17,6 +17,11 @@
     ###
     # GENERAL Setup
     ###
+    - name: Creates directory
+      file:
+        path: "{{ traefik_dir }}"
+        state: directory
+
     - name: Copy compose files to remote server
       copy:
         src: "{{ item }}"
