@@ -4,5 +4,5 @@ insecure: true
 debug: true
 
 # caServer: https://acme-staging-v02.api.letsencrypt.org/directory # for testing
-caServer: https://acme-v02.api.letsencrypt.org/directorys
+caServer: https://acme-v02.api.letsencrypt.org/directory
 dnsChallengeProvider: ovh
