@@ -14,9 +14,9 @@ services:
           constraints: [node.role == manager]
         labels:
         - "traefik.enable=true"
-        - "traefik.http.services.portainer.loadbalancer.server.port=5000" # it seems you always need to give traefik a port so it 'notices' the service  
-        - "traefik.http.routers.portainer.entrypoints=websecure"
-        - "traefik.http.routers.portainer.rule=Host(`docker.nokwebspace.ovh`)"
+        - "traefik.http.services.docker_registry.loadbalancer.server.port=5000" # it seems you always need to give traefik a port so it 'notices' the service  
+        - "traefik.http.routers.docker_registry.entrypoints=websecure"
+        - "traefik.http.routers.docker_registry.rule=Host(`docker.nokwebspace.ovh`)"
         - "traefik.docker.network=docker_swarm_public"
 
 volumes:
