@@ -1,5 +1,3 @@
-
-
 # Ansible Playbooks
 
 ## Prepare SSH keys
