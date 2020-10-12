@@ -4,7 +4,5 @@ FROM jupyter/scipy-notebook
 ENV JUPYTER_ENABLE_LAB=yes
 ENV PROJ_LIB=/opt/conda/share/proj
 
-# Stecific to our infra
-RUN conda install -y pymongo \
- && conda install -y basemap \
- && conda install -y cartopy
+# Specific to our infra
+RUN conda install -c conda-forge -y pymongo basemap cartopy

@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  # Configuration for Hub+Proxy
+  jupyterhub:
+    build: jupyterhub                # Build the container from this folder.
+    image: jupyterhub_img
+    # This is necessary to prevent the singleton hub from using its service number as its hostname
+    hostname: jupyterhub
+    ports:
+      - 8000:8000
+    volumes:                         # Give access to Docker socket.
+      - /var/run/docker.sock:/var/run/docker.sock
+      - jupyterhub_data:/srv/jupyterhub
+      - C:\Users\coued\Projects\OR\OR_NETWORK-AND-DISCRETE-LOCATION\Environnements\ansible-playbook\jupyterhub\jupyterhub\jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
+    environment:                     # Env variables passed to the Hub process.
+      DOCKER_JUPYTER_IMAGE: jupyterlab_img
+      DOCKER_NETWORK_NAME: jupyter_jupyterhub_network
+    networks:
+      - jupyterhub_network
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+
+  # Configuration for the single-user servers
+  jupyterlab:
+    build: jupyterlab
+    image: jupyterlab_img
+    command: echo
+    deploy:
+      replicas: 0
+
+volumes:
+  jupyterhub_data:
+
+networks:
+  jupyterhub_network:
+    driver: overlay
+    

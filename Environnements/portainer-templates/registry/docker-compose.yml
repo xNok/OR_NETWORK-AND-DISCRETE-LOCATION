@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 
 services:
   docker_local_registry:
@@ -7,13 +7,6 @@ services:
     - registry_data:/var/lib/registry
     networks:
     - docker_swarm_public
-    secrets:
-      - "MINIO_ACCESS_KEY"
-      - "MINIO_SECRET_KEY"
-    environment:
-      # expose the path to file provided by docker containing the value we want for OVH_ENDPOINT.
-      - "MINIO_ACCESS_KEY_FILE=/run/secrets/MINIO_ACCESS_KEY"
-      - "MINIO_SECRET_KEY_FILE=/run/secrets/MINIO_SECRET_KEY"
     deploy:
         mode: replicated
         replicas: 1
@@ -26,27 +19,31 @@ services:
         - "traefik.http.routers.docker_registry.rule=Host(`docker.nokwebspace.ovh`)"
         - "traefik.docker.network=docker_swarm_public"
 
-    app:
-      image: minio/minio
-      command:  minio server /data
-      volumes:
-        - minio_data:/data
-      networks:
-        - docker_swarm_public
-      deploy:
-        mode: replicated
-        replicas: 1
-        placement:
-          constraints: [node.role == manager]
-        labels:
-          - "traefik.enable=true"
-          - "traefik.http.services.minio.loadbalancer.server.port=9000" # it seems you always need to give traefik a port so it 'notices' the service  
-          - "traefik.http.routers.minio.entrypoints=websecure"
-          - "traefik.http.routers.minio.rule=Host(`minio.nokwebspace.ovh`)"
-          - "traefik.docker.network=docker_swarm_public"
-
-secrets:
-
+  minio:
+    image: minio/minio
+    command:  minio server /data
+    volumes:
+      - minio_data:/data
+    networks:
+      - docker_swarm_public
+    secrets:
+      - "MINIO_ACCESS_KEY"
+      - "MINIO_SECRET_KEY"
+    environment:
+      # expose the path to file provided by docker containing the value we want for OVH_ENDPOINT.
+      - "MINIO_ACCESS_KEY_FILE=/run/secrets/MINIO_ACCESS_KEY"
+      - "MINIO_SECRET_KEY_FILE=/run/secrets/MINIO_SECRET_KEY"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.minio.loadbalancer.server.port=9000" # it seems you always need to give traefik a port so it 'notices' the service  
+        - "traefik.http.routers.minio.entrypoints=websecure"
+        - "traefik.http.routers.minio.rule=Host(`minio.nokwebspace.ovh`)"
+        - "traefik.docker.network=docker_swarm_public"
 
 volumes:
   registry_data:
@@ -54,7 +51,7 @@ volumes:
 
 networks: 
   docker_swarm_public:
-      external: true
+    external: true
 
 secrets:
   MINIO_ACCESS_KEY:

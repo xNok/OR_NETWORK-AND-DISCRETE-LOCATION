@@ -37,9 +37,16 @@ Traefik is availiables at:
 * https://github.com/acmesh-official/acme.sh/wiki/How-to-use-OVH-domain-api
 
 
-## Local testing
+### Local testing
 
 `docker stack deploy traefik --compose-file .\docker-compose.yml --compose-file .\docker-compose.local.yml`
+
+### Install Jupyterhub
+
+```
+docker-compose build
+docker stack deploy jupyter --compose-file .\docker-compose.yml
+```
 
 ## References
 
@@ -47,9 +54,12 @@ Traefik is availiables at:
 * https://dev.to/ohffs/traefik-v2-with-docker-swarm-2cgh
 * https://medium.com/@jakub.hajek/container-orchestration-with-traefik-2-x-and-docker-swarm-with-canary-deployment-27e7ea62af6f
 
-Let's Encrypt:
+### Let's Encrypt:
 * https://medium.com/nephely/configure-traefik-for-the-dns-01-challenge-with-ovh-as-dns-provider-c737670c0434
 * https://docs.traefik.io/user-guides/docker-compose/acme-dns/
 
-Ansible Vault:
+### Ansible Vault:
 *https://symfonycasts.com/screencast/ansible/variable-vault
+
+### Jupyterhub:
+* https://opendreamkit.org/2018/10/17/jupyterhub-docker/
