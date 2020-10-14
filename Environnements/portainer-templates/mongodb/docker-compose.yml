@@ -1,0 +1,23 @@
+version: '2.1'
+
+services:
+    mongodb:
+        image: mongo
+        restart: always
+        # environment:
+        #   MONGO_INITDB_ROOT_USERNAME: root
+        #   MONGO_INITDB_ROOT_PASSWORD: example
+        volumes:
+           - db-data:/data/db 
+    mongoclient:
+        image: mongoclient/mongoclient
+        hostname: mongoclient
+        environment: 
+            MONGOCLIENT_DEFAULT_CONNECTION_URL: mongodb://mongodb:27017/NETWORK-AND-DISCRETE-LOCATION
+        depends_on:
+        - mongodb
+        ports:
+        - 3300:3000
+
+volumes:
+    db-data:
