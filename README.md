@@ -1,16 +1,20 @@
 Network and discrete location Datasets
 ===
 
-## Start
+## Start working locally
 
 ```
 docker-compose up
 ```
 
-## Architecture
+## Online hub
 
-Elements:
-* JupyterLab
-* MongoDB
-* CPLEX experiment runner
+For Development:
+* Jupyterhub
+    * Juputerlab
+
+Operations:
+* Traefik
+* Portainer
+
 

@@ -48,6 +48,12 @@ docker-compose build
 docker stack deploy jupyter --compose-file .\docker-compose.yml
 ```
 
+If the image are Ok push them to the private repository 
+
+```
+docker-compose push
+```
+
 ## References
 
 * https://www.codementor.io/@slavko/unobtrusive-local-development-with-traefik2-docker-and-letsencrypt-15qw1ypoi8

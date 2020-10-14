@@ -9,3 +9,6 @@ ansible_traefik:
 
 ansible_portainer:
 	cd ./Environnements/ && ansible-playbook ansible-playbook/portainer/playbook.yml -i .inv
+
+ansible_jupyter:
+	cd ./Environnements/ && ansible-playbook ansible-playbook/jupyterhub/playbook.yml -i .inv

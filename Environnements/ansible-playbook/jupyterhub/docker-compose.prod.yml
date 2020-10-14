@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  # Configuration for Hub+Proxy
+  jupyterhub:
+    image: docker.nokwebspace.ovh/jupyterhub_img
+    networks:
+      - docker_swarm_public
+    environment:                     # Env variables passed to the Hub process.
+      DOCKER_JUPYTER_IMAGE: docker.nokwebspace.ovh/jupyterlab_img
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.jupyterhub.loadbalancer.server.port=8000" # it seems you always need to give traefik a port so it 'notices' the service  
+        - "traefik.http.routers.jupyterhub.entrypoints=websecure"
+        - "traefik.http.routers.jupyterhub.rule=Host(`jupyterhub.nokwebspace.ovh`)"
+
+  # Configuration for the single-user servers
+  jupyterlab:
+    image: docker.nokwebspace.ovh/jupyterlab_img
+
+networks:
+  docker_swarm_public:
+    external: true

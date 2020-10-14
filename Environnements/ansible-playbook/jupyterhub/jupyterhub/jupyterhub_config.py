@@ -1,4 +1,4 @@
-import os
+import os, sys
 
 # We start with the configuration of the spawner:
 # we use the class DockerSpawner to spawn single-user servers in a separate Docker container.
@@ -13,13 +13,13 @@ network_name = os.environ['DOCKER_NETWORK_NAME']
 c.SwarmSpawner.network_name = network_name
 
 # Optionally, we may want to stop the single-user servers after a certain amount of idle time. Following this example, we register a JupyterHub service like this:
-# c.JupyterHub.services = [
-#     {
-#         'name': 'cull_idle',
-#         'admin': True,
-#         'command': 'python /srv/jupyterhub/cull_idle_servers.py --timeout=3600'.split(),
-#     },
-# ]
+c.JupyterHub.services = [
+    {
+        'name': 'cull-idle',
+        'admin': True,
+        'command': [sys.executable, 'cull_idle_servers.py', '--timeout=3600'],
+    }
+]
 
 # Redirect to JupyterLab, instead of the plain Jupyter notebook
 c.Spawner.default_url = '/lab'
@@ -34,6 +34,13 @@ c.DummyAuthenticator.password = "your strong password"
 
 # user data persistence
 # see https://github.com/jupyterhub/dockerspawner#data-persistence-and-dockerspawner
-notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
-c.SwarmSpawner.notebook_dir = notebook_dir
-# c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
+# Explicitly set notebook directory because we'll be mounting a host volume to
+# it.  Most jupyter/docker-stacks *-notebook images run the Notebook server as
+# user `jovyan`, and set the notebook directory to `/home/jovyan/work`.
+# We follow the same convention.
+# notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
+# c.SwarmSpawner.notebook_dir = notebook_dir
+
+# Mount the real user's Docker volume on the host to the notebook user's
+# notebook directory in the container
+# c.SwarmSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }

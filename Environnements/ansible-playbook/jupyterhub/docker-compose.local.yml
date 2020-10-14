@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  # Configuration for Hub+Proxy
+  jupyterhub:
+    ports:
+      - 8000:8000
+    volumes:                         # Give access to Docker socket.
+      - C:\Users\coued\Projects\OR\OR_NETWORK-AND-DISCRETE-LOCATION\Environnements\ansible-playbook\jupyterhub\jupyterhub\jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
+    

@@ -1,0 +1,41 @@
+#################################################
+# OR INFRA Playbooks: Jupyterhub
+#################################################
+---
+- hosts: swarm_managers
+  gather_facts: no
+  become: true
+  # vars_files:
+  #   - vars/default.yml
+  vars:  
+    jupyterhub_dir: "/var/data/jupyterhub"
+  tasks:
+    ###
+    # GENERAL Setup
+    ###
+    - name: Creates directory
+      file:
+        path: "{{ jupyterhub_dir }}"
+        state: directory
+
+    - name: Copy compose files to remote server
+      copy:
+        src: "{{ item }}"
+        dest: "{{ jupyterhub_dir }}"
+      with_fileglob:
+        - "{{ playbook_dir }}/docker-compose.*"
+      tags:
+        - general_setup
+        - redeploy
+    ###
+    # Docker Stack
+    ###
+    - name: Start Jupyterhub Stack
+      docker_stack:
+        state: present
+        name: jupyterhub
+        compose: 
+        - "{{ jupyterhub_dir }}/docker-compose.yml"
+        - "{{ jupyterhub_dir }}/docker-compose.prod.yml"
+      tags:
+        - redeploy
