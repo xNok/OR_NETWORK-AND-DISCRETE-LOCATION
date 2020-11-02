@@ -28,6 +28,7 @@ services:
                 - "traefik.http.services.mongoclient.loadbalancer.server.port=3300" # it seems you always need to give traefik a port so it 'notices' the service  
                 - "traefik.http.routers.mongoclient.entrypoints=websecure"
                 - "traefik.http.routers.mongoclient.rule=Host(`mongoclient.nokwebspace.ovh`)"
+                - "traefik.http.routers.mongoclient.middlewares=traefik-forward-auth"
         
 volumes:
     db-data:
