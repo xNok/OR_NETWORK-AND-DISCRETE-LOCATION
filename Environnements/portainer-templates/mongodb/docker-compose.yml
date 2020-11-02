@@ -1,14 +1,16 @@
-version: '2.1'
+version: '3.3'
 
 services:
     mongodb:
         image: mongo
-        restart: always
-        # environment:
-        #   MONGO_INITDB_ROOT_USERNAME: root
-        #   MONGO_INITDB_ROOT_PASSWORD: example
         volumes:
-           - db-data:/data/db 
+           - db-data:/data/db
+        networks: 
+        - jupyterhub_jupyterhub_network
+        deploy:
+            mode: replicated
+            replicas: 1
+
     mongoclient:
         image: mongoclient/mongoclient
         hostname: mongoclient
@@ -16,8 +18,22 @@ services:
             MONGOCLIENT_DEFAULT_CONNECTION_URL: mongodb://mongodb:27017/NETWORK-AND-DISCRETE-LOCATION
         depends_on:
         - mongodb
-        ports:
-        - 3300:3000
-
+        networks:
+        - docker_swarm_public
+        deploy:
+            mode: replicated
+            replicas: 1
+            labels:
+                - "traefik.enable=true"
+                - "traefik.http.services.mongoclient.loadbalancer.server.port=3300" # it seems you always need to give traefik a port so it 'notices' the service  
+                - "traefik.http.routers.mongoclient.entrypoints=websecure"
+                - "traefik.http.routers.mongoclient.rule=Host(`mongoclient.nokwebspace.ovh`)"
+        
 volumes:
     db-data:
+
+networks: 
+    docker_swarm_public:
+        external: true
+    jupyterhub_jupyterhub_network:
+        external: true
